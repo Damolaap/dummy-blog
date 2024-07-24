@@ -16,8 +16,8 @@ from BlogApp.models import BlogPost
 def show_index(request):
     
     search = request.GET.get('query')
-    
-    if search is not None : 
+
+    if search is not None and len(search.strip()) > 0: 
         blog_data = BlogPost.objects.filter(blog_title__icontains = search)
     
     else:
