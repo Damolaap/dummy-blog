@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from BlogApp.models import BlogPost
+from django.shortcuts import render, redirect
+from BlogApp.models import *
 
 # Create your views here.
 
@@ -30,8 +30,20 @@ def show_index(request):
 
 def show_post(request, id):
     post = BlogPost.objects.filter(id = id).first()
+    comment = Comments.objects.filter(owner = post)
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        comment = request.POST.get('comment')
+
+        new_comment = Comments(owner = post, name = name, email = email, comment = comment)
+        new_comment.save()
+        
+        return redirect(f'/post/{id}/')
     context = {
-    'post' : post
+        'comments' : comment,
+        'post' : post,
         }
     return render(request, 'post.html', context)
 
